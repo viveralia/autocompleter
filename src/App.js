@@ -1,90 +1,87 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import { TextField, Grid, Container, Typography } from "@material-ui/core";
 
-const AddressForm = () => {
+export default class App extends Component {
+  state = {};
+
   /***************************/
   /******** FUNCTIONS ********/
   /***************************/
-  const handleChange = e => {
-    setPostInfo({
-      ...postInfo,
+  handleChange = e => {
+    this.setState({
+      ...this.state,
       [e.target.name]: e.target.value
     });
   };
-  const handleBlur = () => {
-    postInfo.id && fetchPostInfo(postInfo.id);
+  handleBlur = () => {
+    this.state.id && this.fetchPostInfo(this.state.id);
   };
-  const handleSubmit = e => {
+  handleSubmit = e => {
     e.preventDefault();
     alert("Sent");
   };
-  const fetchPostInfo = async postId => {
+  fetchPostInfo = async postId => {
     const url = `https://jsonplaceholder.typicode.com/posts/${postId}`;
     const response = await fetch(url);
     const { title, body } = await response.json();
-    setPostInfo({
-      ...postInfo,
+    this.setState({
+      ...this.state,
       title,
       body
     });
   };
 
   /***************************/
-  /********** HOOKS **********/
-  /***************************/
-  const [postInfo, setPostInfo] = useState({});
-
-  /***************************/
   /********** VIEW ***********/
   /***************************/
-  return (
-    <Container>
-      <Typography component="h1" variant="h5">
-        Autocompleter
-      </Typography>
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          {/* Post Id */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Post ID"
-              variant="outlined"
-              name="id"
-              value={postInfo.id || ""}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
+  render() {
+    return (
+      <Container>
+        <Typography component="h1" variant="h5">
+          Autocompleter
+        </Typography>
+        <form noValidate autoComplete="off" onSubmit={this.handleSubmit}>
+          <Grid container spacing={2}>
+            {/* Post Id */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Post ID"
+                variant="outlined"
+                name="id"
+                value={this.state.id || ""}
+                onChange={this.handleChange}
+                onBlur={this.handleBlur}
+              />
+            </Grid>
+            {/* Title */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Title"
+                variant="outlined"
+                name="title"
+                value={this.state.title || ""}
+                onChange={this.handleChange}
+              />
+            </Grid>
+            {/* Content/Body */}
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Content"
+                variant="outlined"
+                name="body"
+                value={this.state.body || ""}
+                onChange={this.handleChange}
+              />
+            </Grid>
           </Grid>
-          {/* Title */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Title"
-              variant="outlined"
-              name="title"
-              value={postInfo.title || ""}
-              onChange={handleChange}
-            />
-          </Grid>
-          {/* Content/Body */}
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Content"
-              variant="outlined"
-              name="body"
-              value={postInfo.body || ""}
-              onChange={handleChange}
-            />
-          </Grid>
-        </Grid>
-      </form>
-    </Container>
-  );
-};
-
-export default AddressForm;
+        </form>
+      </Container>
+    );
+  }
+}
